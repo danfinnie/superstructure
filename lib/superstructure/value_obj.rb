@@ -3,12 +3,10 @@ module Superstructure
     class << self
       def new *arguments
         Class.new do
-          attr_reader *arguments
+          attr_reader :to_hash
 
-          define_method(:initialize) do |opts|
-            opts.each do |(opt, value)|
-              instance_variable_set("@#{opt}", value)
-            end
+          def initialize(to_hash={})
+            @to_hash = to_hash
           end
 
           define_method(:inspect) do
@@ -16,6 +14,12 @@ module Superstructure
               "#{argument}=#{public_send(argument).inspect}"
             end.join(", ")
             "#<value_obj #{self.class} #{opts}>"
+          end
+
+          arguments.each do |argument|
+            define_method(argument) do
+              to_hash[argument]
+            end
           end
         end
       end

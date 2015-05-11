@@ -9,6 +9,14 @@ RSpec.describe Superstructure::ValueObj do
     expect(foobar.bar).to eq 2
   end
 
+  it "exposes options in the to_hash method" do
+    foobar = FooBar.new(foo: "foo?", bar: "bar?")
+    expect(foobar.to_hash).to eq({
+      foo: "foo?",
+      bar: "bar?"
+    })
+  end
+
   it "exposes the parameters as readers" do
     expect(FooBar.instance_methods).to include :foo, :bar
   end
