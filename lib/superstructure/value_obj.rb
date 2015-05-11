@@ -9,9 +9,9 @@ module Superstructure
             @to_hash = to_hash
           end
 
-          define_method(:inspect) do
-            opts = arguments.map do |argument|
-              "#{argument}=#{public_send(argument).inspect}"
+          def inspect
+            opts = to_hash.map do |opt_and_value|
+              opt_and_value.join("=")
             end.join(", ")
             "#<value_obj #{self.class} #{opts}>"
           end
