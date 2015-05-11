@@ -1,5 +1,5 @@
-require "superstructure/version"
-
 module Superstructure
-  # Your code goes here...
 end
+
+require "superstructure/version"
+require "superstructure/value_obj"
