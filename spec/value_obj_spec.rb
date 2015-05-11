@@ -13,6 +13,12 @@ RSpec.describe Superstructure::ValueObj do
     expect(FooBar.instance_methods).to include :foo, :bar
   end
 
+  it "does not expose writers" do
+    foobar = FooBar.new(foo: :fruu, bar: :bruu)
+    expect(foobar).not_to respond_to :foo=
+    expect(foobar).not_to respond_to :bar=
+  end
+
   it "has inspect output similar to Struct" do
     foobar = FooBar.new(foo: 1, bar: 2)
     expect(foobar.inspect).to eq '#<value_obj FooBar foo=1, bar=2>'
