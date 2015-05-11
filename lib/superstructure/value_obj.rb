@@ -5,8 +5,11 @@ module Superstructure
         Class.new do
           attr_reader :to_hash
 
-          def initialize(to_hash={})
-            @to_hash = to_hash
+          def initialize(opts={})
+            @to_hash = opts.inject({}) do |memo, (key, value)|
+              memo[key.intern] = value
+              memo
+            end
           end
 
           def inspect

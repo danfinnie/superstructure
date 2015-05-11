@@ -9,6 +9,18 @@ RSpec.describe Superstructure::ValueObj do
     expect(foobar.bar).to eq 2
   end
 
+  it "accepts parameters from string arguments" do
+    foobar = FooBar.new("foo" => "foo", "bar" => :bar)
+    expect(foobar.foo).to eq "foo"
+    expect(foobar.bar).to eq :bar
+  end
+
+  it "accepts parameters from a mix of string and symbol arguments" do
+    foobar = FooBar.new("foo" => "foo", bar: :bar)
+    expect(foobar.foo).to eq "foo"
+    expect(foobar.bar).to eq :bar
+  end
+
   it "exposes options in the to_hash method" do
     foobar = FooBar.new(foo: "foo?", bar: "bar?")
     expect(foobar.to_hash).to eq({
