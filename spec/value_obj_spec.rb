@@ -43,4 +43,38 @@ RSpec.describe Superstructure::ValueObj do
     foobar = FooBar.new(foo: 1, bar: 2)
     expect(foobar.inspect).to eq '#<value_obj FooBar foo=1, bar=2>'
   end
+
+  describe "equality" do
+    shared_examples_for "equality" do |operator|
+      it "is equal if all arguments are equal" do
+        alpha = FooBar.new(foo: 1, bar: 2)
+        beta = FooBar.new("foo" => 1, "bar" => 2)
+        expect(alpha.public_send(operator, beta)).to be_truthy
+      end
+
+      it "is not equal if any argument doesn't equal" do
+        alpha = FooBar.new(foo: 1, bar: 2000)
+        beta = FooBar.new("foo" => 1, "bar" => 2)
+        expect(alpha.public_send(operator, beta)).to be_falsey
+      end
+
+      it "is equal only to other instances of the same class" do
+        klass = Superstructure::ValueObj.new(:foo, :bar)
+        opts = { foo: 42, bar: 24 }
+
+        foobar = FooBar.new(opts)
+        barfoo = klass.new(opts)
+
+        expect(foobar.public_send(operator, barfoo)).to be_falsey
+      end
+    end
+
+    describe "==" do
+      it_behaves_like "equality", :==
+    end
+
+    describe "eql?" do
+      it_behaves_like "equality", :eql?
+    end
+  end
 end

@@ -19,6 +19,12 @@ module Superstructure
             "#<value_obj #{self.class} #{opts}>"
           end
 
+          def ==(o)
+            self.class == o.class && to_hash == o.to_hash
+          end
+
+          alias :eql? :==
+
           arguments.each do |argument|
             define_method(argument) do
               to_hash[argument]
