@@ -44,6 +44,13 @@ RSpec.describe Superstructure::ValueObj do
     expect(foobar.inspect).to eq '#<value_obj FooBar foo=1, bar=2>'
   end
 
+  it "can inherit from other classes" do
+    superclass = Class.new
+    subclass = Superstructure::ValueObj.new(:alpha, superclass: superclass)
+    instance = subclass.new(alpha: "alpha")
+    expect(instance).to be_kind_of superclass
+  end
+
   describe "equality" do
     shared_examples_for "equality" do |operator|
       it "is equal if all arguments are equal" do

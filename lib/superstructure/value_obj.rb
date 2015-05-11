@@ -1,8 +1,8 @@
 module Superstructure
   class ValueObj
     class << self
-      def new *arguments
-        Class.new do
+      def new *arguments, superclass: Object
+        Class.new(superclass) do
           attr_reader :to_hash
 
           def initialize(opts={})
