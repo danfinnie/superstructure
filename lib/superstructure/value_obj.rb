@@ -1,7 +1,7 @@
 module Superstructure
   class ValueObj
     class << self
-      def new *arguments, superclass: Object
+      def new *arguments, superclass: Object, &blk
         Class.new(superclass) do
           attr_reader :to_hash
 
@@ -30,6 +30,8 @@ module Superstructure
               to_hash[argument]
             end
           end
+
+          class_eval(&blk) if blk
         end
       end
     end

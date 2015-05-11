@@ -51,6 +51,17 @@ RSpec.describe Superstructure::ValueObj do
     expect(instance).to be_kind_of superclass
   end
 
+  it "can be passed additional methods" do
+    klass = Superstructure::ValueObj.new(:alpha) do
+      def hello
+        "bonjour"
+      end
+    end
+
+    instance = klass.new(alpha: "Alpharetta")
+    expect(instance.hello).to eq "bonjour"
+  end
+
   describe "equality" do
     shared_examples_for "equality" do |operator|
       it "is equal if all arguments are equal" do
