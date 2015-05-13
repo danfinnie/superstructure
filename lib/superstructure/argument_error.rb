@@ -6,7 +6,11 @@ module Superstructure
     superclass: ::ArgumentError
   ) do
     def message
-      inspect
+      [
+        extra_params.any? ? "Received unexpected options: #{extra_params.inspect}" : nil,
+        missing_params.any? ? "Expected but did not receive: #{missing_params.inspect}" : nil,
+        shadowed_params.any? ? "Received a symbol and string version of: #{shadowed_params.inspect}" : nil
+      ].compact.join("\n")
     end
   end
 end
