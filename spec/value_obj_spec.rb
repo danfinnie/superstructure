@@ -1,5 +1,3 @@
-require 'superstructure/value_obj'
-
 RSpec.describe Superstructure::ValueObj do
   FooBar = Superstructure::ValueObj.new(:foo, :bar)
 
