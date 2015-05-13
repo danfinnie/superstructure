@@ -8,8 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Superstructure::VERSION
   spec.authors       = ["Dan Finnie"]
   spec.email         = ["dan@danfinnie.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       =  "Immutable, keyword-argument based value objects for Ruby"
   spec.homepage      = ""
   spec.license       = "MIT"
 
