@@ -13,8 +13,8 @@ module Superstructure
           end
 
           def inspect
-            opts = to_hash.map do |opt_and_value|
-              opt_and_value.join("=")
+            opts = to_hash.map do |k, v|
+              "#{k}=#{v.inspect}"
             end.join(", ")
             "#<value_obj #{self.class} #{opts}>"
           end

@@ -37,9 +37,16 @@ RSpec.describe Superstructure::ValueObj do
     expect(foobar).not_to respond_to :bar=
   end
 
-  it "has inspect output similar to Struct" do
-    foobar = FooBar.new(foo: 1, bar: 2)
-    expect(foobar.inspect).to eq '#<value_obj FooBar foo=1, bar=2>'
+  describe "#inspect" do
+    it "basic stuff" do
+      foobar = FooBar.new(foo: 1, bar: 2)
+      expect(foobar.inspect).to eq '#<value_obj FooBar foo=1, bar=2>'
+    end
+
+    it "handles complicated data structures" do
+      foobar = FooBar.new(foo: [:a, :b], bar: 2)
+      expect(foobar.inspect).to eq '#<value_obj FooBar foo=[:a, :b], bar=2>'
+    end
   end
 
   it "can inherit from other classes" do
