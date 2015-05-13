@@ -1,5 +1,6 @@
 RSpec.describe Superstructure::ValueObj do
-  FooBar = Superstructure::ValueObj.new(:foo, :bar)
+  FooBar = Superstructure::ValueObj.new :foo, :bar
+  Empty = Superstructure::ValueObj.new
 
   it "accepts parameters from symbol arguments and exposes them as methods" do
     foobar = FooBar.new(foo: 1, bar: 2)
@@ -67,6 +68,15 @@ RSpec.describe Superstructure::ValueObj do
     expect(instance.hello).to eq "bonjour"
   end
 
+  it "does not mutate the input" do
+    opts = { foo: 42, bar: 24 }
+
+    FooBar.new(opts)
+
+    expect(opts[:foo]).to eq 42
+    expect(opts[:bar]).to eq 24
+  end
+
   describe "equality" do
     shared_examples_for "equality" do |operator|
       it "is equal if all arguments are equal" do
@@ -98,6 +108,42 @@ RSpec.describe Superstructure::ValueObj do
 
     describe "eql?" do
       it_behaves_like "equality", :eql?
+    end
+  end
+
+  describe "error handling" do
+    it "is an error to not pass all of the parameters" do
+      expect { FooBar.new(foo: 1) }.to raise_error(Superstructure::ArgumentError) do |error|
+        expect(error.missing_params).to eq [:bar]
+        expect(error.extra_params).to be_empty
+        expect(error.shadowed_params).to be_empty
+      end
+    end
+
+    it "it an error to pass an extra parameter" do
+      expect { Empty.new(baz: 3, lolcat: 4) }.to raise_error(Superstructure::ArgumentError) do |error|
+        expect(error.missing_params).to be_empty
+        expect(error.extra_params).to match [:baz, :lolcat]
+        expect(error.shadowed_params).to be_empty
+      end
+    end
+
+    it "is an error to pass a symbol and string version of the same paramter" do
+      expect { FooBar.new(foo: 1, "foo" => 2, bar: 3) }.to raise_error(Superstructure::ArgumentError) do |error|
+        expect(error.missing_params).to be_empty
+        expect(error.extra_params).to be_empty
+        expect(error.shadowed_params).to eq [:foo]
+      end
+    end
+
+    it "does not create symbols for erroneous keys (as this could be a memory leak)" do
+      expect do
+        begin
+          Empty.new("extra_symbol_1" => 1)
+        rescue Superstructure::ArgumentError => e
+          # noop
+        end
+      end.not_to change { Symbol.all_symbols.size }
     end
   end
 end

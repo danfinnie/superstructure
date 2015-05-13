@@ -3,3 +3,4 @@ end
 
 require "superstructure/version"
 require "superstructure/value_obj"
+require "superstructure/argument_error"
