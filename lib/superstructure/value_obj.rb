@@ -3,10 +3,8 @@ module Superstructure
     class << self
       def new *arguments, superclass: Object, &blk
         Class.new(superclass) do
-          attr_reader :to_hash
-
           define_method(:initialize) do |opts={}|
-            attributes = {}
+            @attributes = {}
             missing_params = []
             shadowed_params = []
             used_params = []
@@ -17,10 +15,10 @@ module Superstructure
                 used_params << argument << argument.to_s
 
               elsif opts.has_key?(argument)
-                attributes[argument] = opts[argument]
+                @attributes[argument] = opts[argument]
                 used_params << argument
               elsif opts.has_key?(argument.to_s)
-                attributes[argument] = opts[argument.to_s]
+                @attributes[argument] = opts[argument.to_s]
                 used_params << argument.to_s
               else
                 missing_params << argument
@@ -36,12 +34,14 @@ module Superstructure
                 extra_params: extra_params
               )
             end
+          end
 
-            @to_hash = attributes
+          def to_hash
+            @attributes.clone
           end
 
           def inspect
-            opts = to_hash.map do |k, v|
+            opts = @attributes.map do |k, v|
               "#{k}=#{v.inspect}"
             end.join(", ")
             "#<value_obj #{self.class} #{opts}>"

@@ -36,6 +36,12 @@ RSpec.describe Superstructure::ValueObj do
         bar: "bar?"
       })
     end
+
+    it "returns an object that can be mutated without affecting the value object" do
+      foobar = FooBar.new(foo: "alpha", bar: nil)
+      foobar.to_hash[:foo] = "beta"
+      expect(foobar.foo).to eq "alpha"
+    end
   end
 
   it "exposes the parameters as readers" do
