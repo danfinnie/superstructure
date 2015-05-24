@@ -5,15 +5,13 @@ module Superstructure
         Class.new(superclass) do
           define_method(:initialize) do |opts={}|
             @attributes = {}
-            missing_params = []
-            shadowed_params = []
             used_params = []
+            possible_error = ArgumentErrorBuilder.new
 
             arguments.each do |argument|
               if opts.has_key?(argument) && opts.has_key?(argument.to_s)
-                shadowed_params << argument
+                possible_error.add_error(:shadowed_params, argument)
                 used_params << argument << argument.to_s
-
               elsif opts.has_key?(argument)
                 @attributes[argument] = opts[argument]
                 used_params << argument
@@ -21,18 +19,14 @@ module Superstructure
                 @attributes[argument] = opts[argument.to_s]
                 used_params << argument.to_s
               else
-                missing_params << argument
+                possible_error.add_error(:missing_params, argument)
               end
             end
 
-            extra_params = opts.keys - used_params
+            possible_error.add_errors(:extra_params, opts.keys - used_params)
 
-            if missing_params.any? || shadowed_params.any? || extra_params.any?
-              raise ArgumentError.new(
-                missing_params: missing_params,
-                shadowed_params: shadowed_params,
-                extra_params: extra_params
-              )
+            if possible_error.error?
+              raise possible_error.build
             end
           end
 
