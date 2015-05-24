@@ -100,17 +100,17 @@ RSpec.describe Superstructure::ValueObj do
   end
 
   describe "equality" do
-    shared_examples_for "equality" do |operator|
+    shared_examples_for "equality" do |sameness_proc|
       it "is equal if all arguments are equal" do
         alpha = FooBar.new(foo: 1, bar: 2)
         beta = FooBar.new("foo" => 1, "bar" => 2)
-        expect(alpha.public_send(operator, beta)).to be_truthy
+        expect(sameness_proc.(alpha, beta)).to be_truthy
       end
 
       it "is not equal if any argument doesn't equal" do
         alpha = FooBar.new(foo: 1, bar: 2000)
         beta = FooBar.new("foo" => 1, "bar" => 2)
-        expect(alpha.public_send(operator, beta)).to be_falsey
+        expect(sameness_proc.(alpha, beta)).to be_falsey
       end
 
       it "is equal only to other instances of the same class" do
@@ -120,16 +120,20 @@ RSpec.describe Superstructure::ValueObj do
         foobar = FooBar.new(opts)
         barfoo = klass.new(opts)
 
-        expect(foobar.public_send(operator, barfoo)).to be_falsey
+        expect(sameness_proc.(foobar, barfoo)).to be_falsey
       end
     end
 
     describe "==" do
-      it_behaves_like "equality", :==
+      it_behaves_like "equality", proc { |a, b| a == b }
     end
 
     describe "eql?" do
-      it_behaves_like "equality", :eql?
+      it_behaves_like "equality", proc { |a, b| a.eql? b }
+    end
+
+    describe "hash" do
+      it_behaves_like "equality", proc { |a, b| a.hash == b.hash }
     end
   end
 

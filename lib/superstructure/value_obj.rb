@@ -34,6 +34,10 @@ module Superstructure
 
           alias :eql? :==
 
+          def hash
+            self.class.hash ^ @attributes.hash
+          end
+
           arguments.each do |argument|
             define_method(argument) do
               to_hash[argument]
