@@ -64,6 +64,12 @@ RSpec.describe Superstructure::ValueObj do
       foobar = FooBar.new(foo: [:a, :b], bar: 2)
       expect(foobar.inspect).to eq '#<value_obj FooBar foo=[:a, :b], bar=2>'
     end
+
+    context "when there are no attributes" do
+      it "omits the attibutes" do
+        expect(Empty.new.inspect).to eq "#<value_obj Empty>"
+      end
+    end
   end
 
   it "can inherit from other classes" do

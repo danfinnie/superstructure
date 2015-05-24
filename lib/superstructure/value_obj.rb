@@ -20,7 +20,12 @@ module Superstructure
             opts = @attributes.map do |k, v|
               "#{k}=#{v.inspect}"
             end.join(", ")
-            "#<value_obj #{self.class} #{opts}>"
+
+            unless opts.empty?
+              opts.prepend(" ")
+            end
+
+            "#<value_obj #{self.class}#{opts}>"
           end
 
           def ==(o)
