@@ -3,6 +3,10 @@ module Superstructure
     class << self
       def new *arguments, superclass: Object, &blk
         Class.new(superclass) do
+          define_singleton_method(:with_added_fields) do |*fields|
+            ValueObj.new(*(arguments + fields), superclass: superclass, &blk)
+          end
+
           define_method(:initialize) do |opts={}|
             attribute_parser = AttributeParser.new(arguments, opts)
             if attribute_parser.error?

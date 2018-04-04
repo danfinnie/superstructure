@@ -172,4 +172,32 @@ RSpec.describe Superstructure::ValueObj do
       end.not_to change { Symbol.all_symbols.size }
     end
   end
+
+  describe "creating another structure with additional fields" do
+    it 'walks along the happy path joyously' do
+      Kitten = Superstructure::ValueObj.new(:breed)
+      Yolokitten = Kitten.with_added_fields(:rainbows)
+      yolokitten = Yolokitten.new(breed: 'tabby', rainbows: ['ROY', 'G', 'BIV'])
+      expect(yolokitten.rainbows).to eq ['ROY', 'G', 'BIV']
+    end
+
+    it 'stays classy' do
+      class Actor
+        def act
+          "Once upon a time!"
+        end
+      end
+
+      Superstar = Superstructure::ValueObj.new(:catch_phrase, superclass: Actor) do
+        def sing
+          "Wahoo wahoo"
+        end
+      end
+      Hyperstar = Superstar.with_added_fields(:hype)
+
+      biebs = Hyperstar.new(catch_phrase: "I'm sorry", hype: "Totally")
+      expect(biebs.act).to eq("Once upon a time!")
+      expect(biebs.sing).to eq("Wahoo wahoo")
+    end
+  end
 end
